@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 
@@ -15,7 +15,7 @@ import PrintInvoice from './pages/PrintInvoice';
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="layout-container">
         <Sidebar />
         <div className="main-wrapper">
@@ -37,7 +37,7 @@ function App() {
           </main>
         </div>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
