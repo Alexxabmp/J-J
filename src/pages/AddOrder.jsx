@@ -85,7 +85,7 @@ export default function AddOrder() {
         </div>
 
       <form onSubmit={handleSubmit} className="glass" style={{ padding: '2rem', maxWidth: '800px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div className="form-grid">
           <div>
             <label>Customer Name</label>
             <input required className="input-field" value={formData.customer} onChange={e => setFormData({...formData, customer: e.target.value})} />

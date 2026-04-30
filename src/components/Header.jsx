@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, Menu } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 export default function Header() {
-  const { theme, setTheme } = useContext(AppContext);
+  const { theme, setTheme, isSidebarOpen, setSidebarOpen } = useContext(AppContext);
   const location = useLocation();
 
   const getPageTitle = () => {
@@ -24,7 +24,15 @@ export default function Header() {
 
   return (
     <header className="header no-print">
-      <h1 className="page-title" style={{ margin: 0, fontSize: '1.75rem' }}>{getPageTitle()}</h1>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <button 
+          className="icon-btn mobile-menu-btn" 
+          onClick={() => setSidebarOpen(!isSidebarOpen)}
+        >
+          <Menu size={24} />
+        </button>
+        <h1 className="page-title" style={{ margin: 0, fontSize: '1.75rem' }}>{getPageTitle()}</h1>
+      </div>
       <button 
         className="icon-btn" 
         onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}

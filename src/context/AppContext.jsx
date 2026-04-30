@@ -7,6 +7,7 @@ export const AppProvider = ({ children }) => {
   const [orders, setOrders] = useState([]);
   const [inventory, setInventory] = useState([]);
   const [theme, setTheme] = useState(localStorage.getItem('jj_theme') || 'light');
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('jj_theme', theme);
@@ -172,7 +173,8 @@ export const AppProvider = ({ children }) => {
     <AppContext.Provider value={{ 
       orders, addOrder, updateOrder, editOrder, deleteOrder, markAsDone, 
       theme, setTheme,
-      inventory, addInventoryItem, updateInventoryItem, deleteInventoryItem
+      inventory, addInventoryItem, updateInventoryItem, deleteInventoryItem,
+      isSidebarOpen, setSidebarOpen
     }}>
       {children}
     </AppContext.Provider>

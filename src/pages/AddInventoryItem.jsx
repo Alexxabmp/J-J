@@ -28,7 +28,7 @@ export default function AddInventoryItem() {
         </div>
 
       <form onSubmit={handleSubmit} className="glass" style={{ padding: '2rem', maxWidth: '500px' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="form-grid">
           <div>
             <label>Item Name</label>
             <input required className="input-field" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />

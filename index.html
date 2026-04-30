@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#ff5e00" />
     <link rel="apple-touch-icon" href="/logo.png" />
     <title>J&J Rentals</title>
@@ -12,15 +11,5 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').then(
-            (registration) => { console.log('SW registered: ', registration); },
-            (err) => { console.log('SW registration failed: ', err); }
-          );
-        });
-      }
-    </script>
   </body>
 </html>
