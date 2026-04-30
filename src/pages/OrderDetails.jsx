@@ -16,7 +16,7 @@ export default function OrderDetails() {
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+      <div className="flex-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button className="icon-btn" onClick={() => navigate(-1)}>
             <ArrowLeft size={24} />
@@ -30,7 +30,7 @@ export default function OrderDetails() {
       </div>
 
       <div className="glass" style={{ padding: '2rem', maxWidth: '800px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
+        <div className="form-grid" style={{ marginBottom: '2rem' }}>
           <div>
             <div style={{ opacity: 0.7, fontSize: '0.9rem' }}>Event ID</div>
             <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{order.id}</div>
@@ -50,7 +50,8 @@ export default function OrderDetails() {
         </div>
 
         <h3 style={{ marginBottom: '1.5rem', color: 'var(--text-color)' }}>Items</h3>
-        <table className="data-table" style={{ marginBottom: '2rem' }}>
+        <div className="data-table-wrapper" style={{ marginBottom: '2rem' }}>
+          <table className="data-table">
           <thead>
             <tr>
               <th>Description</th>
@@ -69,27 +70,30 @@ export default function OrderDetails() {
               </tr>
             ))}
           </tbody>
-        </table>
+          </table>
+        </div>
 
         {order.expensesList && order.expensesList.length > 0 && (
           <>
             <h3 style={{ marginBottom: '1.5rem', color: 'var(--text-color)', marginTop: '2.5rem' }}>Expenses</h3>
-            <table className="data-table" style={{ marginBottom: '2rem' }}>
-              <thead>
-                <tr>
-                  <th>Expense Name</th>
-                  <th>Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {order.expensesList.map((exp, idx) => (
-                  <tr key={idx}>
-                    <td>{exp.name}</td>
-                    <td>₱{exp.amount}</td>
+            <div className="data-table-wrapper" style={{ marginBottom: '2rem' }}>
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Expense Name</th>
+                    <th>Amount</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {order.expensesList.map((exp, idx) => (
+                    <tr key={idx}>
+                      <td>{exp.name}</td>
+                      <td>₱{exp.amount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </>
         )}
 

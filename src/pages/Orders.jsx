@@ -17,7 +17,7 @@ export default function Orders() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+      <div className="flex-header">
         <button className="btn-primary" onClick={() => navigate('/orders/add')}>
           <Plus size={18} /> Add Order
         </button>

@@ -46,7 +46,7 @@ export default function PrintInvoice() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }} className="no-print">
+      <div className="flex-header no-print">
         <div style={{ display: 'flex', gap: '1rem' }}>
           <select className="input-field" style={{ margin: 0, width: '150px', appearance: 'auto', paddingRight: '30px' }} value={type} onChange={e => setType(e.target.value)}>
             <option value="Invoice">Invoice</option>

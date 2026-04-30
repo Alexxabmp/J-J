@@ -307,6 +307,31 @@ select.input-field {
   gap: 1rem;
 }
 
+.list-item-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.five-col-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.flex-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
 /* Print Specific */
 @media print {
   .sidebar, .header, .no-print {
@@ -425,6 +450,13 @@ select.input-field {
   
   .form-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .list-item-grid, .five-col-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed var(--glass-border);
   }
   
   .dashboard-card {

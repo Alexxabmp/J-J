@@ -98,11 +98,11 @@ export default function EditOrder() {
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div className="flex-header">
         <button className="icon-btn" onClick={() => navigate(-1)}>
           <ArrowLeft size={24} />
         </button>
-        </div>
+      </div>
 
       <form onSubmit={handleSubmit} className="glass" style={{ padding: '2rem', maxWidth: '800px' }}>
         <div className="form-grid">
@@ -147,7 +147,7 @@ export default function EditOrder() {
 
         <h3 style={{ margin: '1.5rem 0 1rem 0' }}>Items</h3>
         {items.map((item, idx) => (
-          <div key={idx} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr auto', gap: '1rem', alignItems: 'center', marginBottom: '1rem' }}>
+          <div key={idx} className="five-col-grid">
             <select className="input-field" style={{ margin: 0 }} value={item.id} onChange={e => handleItemSelect(idx, e.target.value)} required>
               <option value="" disabled>Select Item</option>
               {inventory.map(inv => (
@@ -166,7 +166,7 @@ export default function EditOrder() {
 
         <h3 style={{ margin: '2rem 0 1rem 0' }}>Expenses Breakdown</h3>
         {expenses.map((exp, idx) => (
-          <div key={idx} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr auto', gap: '1rem', alignItems: 'center', marginBottom: '1rem' }}>
+          <div key={idx} className="list-item-grid">
             <input type="text" placeholder="Expense Name (e.g. Gas, Helper)" required className="input-field" style={{ margin: 0 }} value={exp.name} onChange={e => updateExpense(idx, 'name', e.target.value)} />
             <input type="number" placeholder="Amount (₱)" required className="input-field" style={{ margin: 0 }} value={exp.amount} onChange={e => updateExpense(idx, 'amount', e.target.value)} min="0" />
             <button type="button" className="icon-btn" style={{ color: '#dc2626' }} onClick={() => removeExpense(idx)}><Trash2 size={20} /></button>

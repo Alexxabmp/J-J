@@ -22,7 +22,7 @@ export default function Inventory() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+      <div className="flex-header">
         <button className="btn-primary" onClick={() => navigate('/inventory/add')}>
           <Plus size={18} /> Add Item
         </button>
