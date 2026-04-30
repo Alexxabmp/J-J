@@ -1,137 +1,171 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { supabase } from '../supabaseClient';
 
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [orders, setOrders] = useState(() => {
-    const saved = localStorage.getItem('jj_orders');
-    if (saved) return JSON.parse(saved);
-    return [
-      {
-        id: 'ORD-001',
-        customer: 'Juan Dela Cruz',
-        address: 'Polomolok, South Cotabato',
-        paymentStatus: 'Full',
-        deliveryStatus: 'Delivered',
-        serviceMethod: 'Deliver',
-        dateOrdered: '2026-05-01',
-        returnDate: '2026-05-03',
-        items: [{ description: 'Monoblock Chairs', quantity: 100, rate: 10, amount: 1000 }],
-        expenses: 200,
-        total: 1000,
-        netProfit: 800,
-        status: 'Active'
-      }
-    ];
-  });
-
+  const [orders, setOrders] = useState([]);
+  const [inventory, setInventory] = useState([]);
   const [theme, setTheme] = useState(localStorage.getItem('jj_theme') || 'light');
-
-  const [inventory, setInventory] = useState(() => {
-    const saved = localStorage.getItem('jj_inventory');
-    if (saved) return JSON.parse(saved);
-    return [
-      { id: 'INV-001', name: 'Chairs', quantity: 50, amount: 50 },
-      { id: 'INV-002', name: 'Tables', quantity: 8, amount: 150 }
-    ];
-  });
-
-  useEffect(() => {
-    localStorage.setItem('jj_orders', JSON.stringify(orders));
-  }, [orders]);
 
   useEffect(() => {
     localStorage.setItem('jj_theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
+  // Initial Fetch & Auto-migration
   useEffect(() => {
-    localStorage.setItem('jj_inventory', JSON.stringify(inventory));
-  }, [inventory]);
-
-  const addOrder = (order) => {
-    setOrders([...orders, { ...order, id: `ORD-${String(orders.length + 1).padStart(3, '0')}`, status: 'Active' }]);
-    
-    // Deduct from inventory
-    const newInventory = [...inventory];
-    if (order.items) {
-      order.items.forEach(orderItem => {
-        const invItem = newInventory.find(i => i.id === orderItem.id);
-        if (invItem) {
-          invItem.quantity -= Number(orderItem.quantity);
+    const fetchAndMigrate = async () => {
+      // Fetch Inventory
+      const { data: invData } = await supabase.from('inventory').select('*');
+      if (invData && invData.length > 0) {
+        setInventory(invData.map(d => d.data));
+      } else {
+        const localInv = JSON.parse(localStorage.getItem('jj_inventory') || '[]');
+        if (localInv.length > 0) {
+          for (const item of localInv) {
+            await supabase.from('inventory').upsert({ id: item.id, data: item });
+          }
+          setInventory(localInv);
         }
-      });
+      }
+
+      // Fetch Orders
+      const { data: ordData } = await supabase.from('orders').select('*');
+      if (ordData && ordData.length > 0) {
+        setOrders(ordData.map(d => d.data));
+      } else {
+        const localOrd = JSON.parse(localStorage.getItem('jj_orders') || '[]');
+        if (localOrd.length > 0) {
+          for (const order of localOrd) {
+            await supabase.from('orders').upsert({ id: order.id, data: order });
+          }
+          setOrders(localOrd);
+        }
+      }
+    };
+
+    fetchAndMigrate();
+
+    // Setup polling for changes just in case real-time publication isn't fully enabled
+    const interval = setInterval(async () => {
+      const { data: invData } = await supabase.from('inventory').select('*');
+      if (invData) setInventory(invData.map(d => d.data));
+      
+      const { data: ordData } = await supabase.from('orders').select('*');
+      if (ordData) setOrders(ordData.map(d => d.data));
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const addOrder = async (order) => {
+    const newId = `ORD-${Date.now()}`;
+    const newOrder = { ...order, id: newId, status: 'Active' };
+    
+    // Optimistic UI update
+    setOrders(prev => [...prev, newOrder]);
+    await supabase.from('orders').upsert({ id: newId, data: newOrder });
+
+    if (order.items) {
+      const newInv = [...inventory];
+      for (const orderItem of order.items) {
+        const invItem = newInv.find(i => i.id === orderItem.id);
+        if (invItem) {
+          invItem.quantity = Number(invItem.quantity) - Number(orderItem.quantity);
+          await supabase.from('inventory').upsert({ id: invItem.id, data: invItem });
+        }
+      }
+      setInventory(newInv);
     }
-    setInventory(newInventory);
   };
 
-  const updateOrder = (id, updatedFields) => {
-    setOrders(orders.map(o => o.id === id ? { ...o, ...updatedFields } : o));
+  const updateOrder = async (id, updatedFields) => {
+    const orderToUpdate = orders.find(o => o.id === id);
+    if (!orderToUpdate) return;
+    
+    const newOrder = { ...orderToUpdate, ...updatedFields };
+    setOrders(orders.map(o => o.id === id ? newOrder : o));
+    await supabase.from('orders').upsert({ id, data: newOrder });
   };
 
-  const editOrder = (id, updatedOrder) => {
+  const editOrder = async (id, updatedOrder) => {
     const oldOrder = orders.find(o => o.id === id);
     if (!oldOrder) return;
 
-    const newInventory = [...inventory];
-
-    // Return old items to inventory
+    const inventoryDiff = {};
     if (oldOrder.items) {
-      oldOrder.items.forEach(oldItem => {
-        const invItem = newInventory.find(i => i.id === oldItem.id);
-        if (invItem) {
-          invItem.quantity += Number(oldItem.quantity);
-        }
+      oldOrder.items.forEach(i => {
+        inventoryDiff[i.id] = (inventoryDiff[i.id] || 0) + Number(i.quantity);
       });
     }
-
-    // Deduct new items from inventory
     if (updatedOrder.items) {
-      updatedOrder.items.forEach(newItem => {
-        const invItem = newInventory.find(i => i.id === newItem.id);
-        if (invItem) {
-          invItem.quantity -= Number(newItem.quantity);
-        }
+      updatedOrder.items.forEach(i => {
+        inventoryDiff[i.id] = (inventoryDiff[i.id] || 0) - Number(i.quantity);
       });
     }
 
-    setInventory(newInventory);
-    setOrders(orders.map(o => o.id === id ? { ...o, ...updatedOrder } : o));
+    const newInv = [...inventory];
+    for (const invId of Object.keys(inventoryDiff)) {
+       if (inventoryDiff[invId] !== 0) {
+         const invItem = newInv.find(i => i.id === invId);
+         if (invItem) {
+           invItem.quantity = Number(invItem.quantity) + inventoryDiff[invId];
+           await supabase.from('inventory').upsert({ id: invId, data: invItem });
+         }
+       }
+    }
+    setInventory(newInv);
+
+    const newOrder = { ...oldOrder, ...updatedOrder };
+    setOrders(orders.map(o => o.id === id ? newOrder : o));
+    await supabase.from('orders').upsert({ id, data: newOrder });
   };
 
-  const deleteOrder = (id) => {
+  const deleteOrder = async (id) => {
     setOrders(orders.filter(o => o.id !== id));
+    await supabase.from('orders').delete().eq('id', id);
   };
 
-  const markAsDone = (id) => {
+  const markAsDone = async (id) => {
     const order = orders.find(o => o.id === id);
     if (order && order.status !== 'Done') {
-      updateOrder(id, { status: 'Done' });
+      const newOrder = { ...order, status: 'Done' };
+      setOrders(orders.map(o => o.id === id ? newOrder : o));
+      await supabase.from('orders').upsert({ id, data: newOrder });
       
-      // Return to inventory
-      const newInventory = [...inventory];
       if (order.items) {
-        order.items.forEach(orderItem => {
-          const invItem = newInventory.find(i => i.id === orderItem.id);
+        const newInv = [...inventory];
+        for (const orderItem of order.items) {
+          const invItem = newInv.find(i => i.id === orderItem.id);
           if (invItem) {
-            invItem.quantity += Number(orderItem.quantity);
+             invItem.quantity = Number(invItem.quantity) + Number(orderItem.quantity);
+             await supabase.from('inventory').upsert({ id: invItem.id, data: invItem });
           }
-        });
+        }
+        setInventory(newInv);
       }
-      setInventory(newInventory);
     }
   };
 
-  const addInventoryItem = (item) => {
-    setInventory([...inventory, { ...item, id: `INV-${String(inventory.length + 1).padStart(3, '0')}` }]);
+  const addInventoryItem = async (item) => {
+    const newId = `INV-${Date.now()}`;
+    const newItem = { ...item, id: newId };
+    setInventory(prev => [...prev, newItem]);
+    await supabase.from('inventory').upsert({ id: newId, data: newItem });
   };
 
-  const updateInventoryItem = (id, updatedFields) => {
-    setInventory(inventory.map(i => i.id === id ? { ...i, ...updatedFields } : i));
+  const updateInventoryItem = async (id, updatedFields) => {
+    const item = inventory.find(i => i.id === id);
+    if (!item) return;
+    const newItem = { ...item, ...updatedFields };
+    setInventory(inventory.map(i => i.id === id ? newItem : i));
+    await supabase.from('inventory').upsert({ id, data: newItem });
   };
 
-  const deleteInventoryItem = (id) => {
+  const deleteInventoryItem = async (id) => {
     setInventory(inventory.filter(i => i.id !== id));
+    await supabase.from('inventory').delete().eq('id', id);
   };
 
   return (

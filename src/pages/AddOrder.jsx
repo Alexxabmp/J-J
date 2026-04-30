@@ -18,7 +18,7 @@ export default function AddOrder() {
   });
 
   const [items, setItems] = useState([{ id: '', description: '', quantity: 1, rate: 0, amount: 0 }]);
-  const [expenses, setExpenses] = useState([{ name: '', amount: 0 }]);
+  const [expenses, setExpenses] = useState([]);
 
   const handleItemSelect = (index, invId) => {
     const invItem = inventory.find(i => i.id === invId);
@@ -82,8 +82,7 @@ export default function AddOrder() {
         <button className="icon-btn" onClick={() => navigate(-1)}>
           <ArrowLeft size={24} />
         </button>
-        <h1 className="page-title" style={{ margin: 0 }}>Add New Order</h1>
-      </div>
+        </div>
 
       <form onSubmit={handleSubmit} className="glass" style={{ padding: '2rem', maxWidth: '800px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -137,12 +136,12 @@ export default function AddOrder() {
             </select>
             <input type="number" placeholder="Qty" required className="input-field" style={{ margin: 0 }} value={item.quantity} onChange={e => updateItemQty(idx, e.target.value)} min="1" />
             <input type="number" disabled className="input-field" style={{ margin: 0, opacity: 0.7 }} value={item.rate} />
-            <div style={{ padding: '10px' }}>₱{item.amount}</div>
+            <div style={{ padding: '0 16px', fontSize: '0.9rem', display: 'flex', alignItems: 'center' }}>₱{item.amount}</div>
             <button type="button" className="icon-btn" style={{ color: '#dc2626' }} onClick={() => removeItem(idx)}><Trash2 size={20} /></button>
           </div>
         ))}
-        <button type="button" className="btn-outline" onClick={() => setItems([...items, { id: '', description: '', quantity: 1, rate: 0, amount: 0 }])}>
-          <Plus size={16} /> Add Item
+        <button type="button" className="btn-outline" style={{ marginTop: '0.5rem' }} onClick={() => setItems([...items, { id: '', description: '', quantity: 1, rate: 0, amount: 0 }])}>
+          <Plus size={18} /> Add Item
         </button>
 
         <h3 style={{ margin: '2rem 0 1rem 0' }}>Expenses Breakdown</h3>
@@ -157,15 +156,7 @@ export default function AddOrder() {
           <Plus size={16} /> Add Expense
         </button>
 
-        <div style={{ marginTop: '2rem', padding: '1.5rem', background: 'var(--primary-orange-light)', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>Total Items Amount: <span style={{ color: 'var(--text-color)' }}>₱{items.reduce((s, i) => s + i.amount, 0)}</span></div>
-            <div style={{ color: '#dc2626', fontWeight: 'bold', marginTop: '0.5rem' }}>Total Expenses: ₱{expenses.reduce((s, e) => s + Number(e.amount), 0)}</div>
-          </div>
-          <div style={{ fontSize: '1.8rem', color: 'var(--primary-orange)', fontWeight: 'bold' }}>
-            Net Profit: ₱{items.reduce((s, i) => s + i.amount, 0) - expenses.reduce((s, e) => s + Number(e.amount), 0)}
-          </div>
-        </div>
+
 
         <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
           <button type="submit" className="btn-primary">Save Order</button>

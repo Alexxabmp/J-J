@@ -12,7 +12,7 @@ export default function PrintInvoice() {
     toAddress: '',
     date1: '',
     date2: '',
-    items: [{ description: '', quantity: 1, rate: 0 }],
+    items: [{ description: '', quantity: '', rate: '' }],
   });
 
   const updateItem = (index, field, value) => {
@@ -21,7 +21,7 @@ export default function PrintInvoice() {
     setData({ ...data, items: newItems });
   };
 
-  const addItem = () => setData({ ...data, items: [...data.items, { description: '', quantity: 1, rate: 0 }] });
+  const addItem = () => setData({ ...data, items: [...data.items, { description: '', quantity: '', rate: '' }] });
 
   const total = data.items.reduce((sum, item) => sum + (Number(item.quantity) * Number(item.rate)), 0);
 
@@ -47,16 +47,15 @@ export default function PrintInvoice() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }} className="no-print">
-        <h1 className="page-title" style={{ margin: 0 }}>Print {type}</h1>
         <div style={{ display: 'flex', gap: '1rem' }}>
           <select className="input-field" style={{ margin: 0, width: '150px', appearance: 'auto', paddingRight: '30px' }} value={type} onChange={e => setType(e.target.value)}>
             <option value="Invoice">Invoice</option>
             <option value="Quotation">Quotation</option>
           </select>
-          <button style={{ backgroundColor: 'var(--primary-orange)', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }} onClick={() => handleDownload('pdf')}>
+          <button className="btn-primary" onClick={() => handleDownload('pdf')}>
             Download PDF
           </button>
-          <button style={{ backgroundColor: 'var(--primary-orange)', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }} onClick={() => handleDownload('png')}>
+          <button className="btn-primary" onClick={() => handleDownload('png')}>
             Download PNG
           </button>
         </div>
@@ -93,7 +92,9 @@ export default function PrintInvoice() {
         >
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px' }}>
-            <img src="/logo.png" alt="Logo" style={{ height: '140px', objectFit: 'contain' }} />
+            <div style={{ flex: 1 }}>
+              <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Logo" style={{ height: '140px', objectFit: 'contain' }} />
+            </div>
             <h1 style={{ fontSize: '48px', margin: 0, fontWeight: 'normal', letterSpacing: '2px', textTransform: 'uppercase' }}>{type}</h1>
           </div>
 

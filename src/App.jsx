@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
+
 import Dashboard from './pages/Dashboard';
+import Splash from './pages/Splash';
 import Inventory from './pages/Inventory';
 import AddInventoryItem from './pages/AddInventoryItem';
 import Orders from './pages/Orders';
@@ -20,7 +22,7 @@ function App() {
           <Header />
           <main className="main-content">
             <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/" element={<Splash />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/inventory" element={<Inventory />} />
               <Route path="/inventory/add" element={<AddInventoryItem />} />
@@ -29,6 +31,7 @@ function App() {
               <Route path="/orders/edit/:id" element={<EditOrder />} />
               <Route path="/orders/:id" element={<OrderDetails />} />
               <Route path="/history" element={<History />} />
+              <Route path="/history/:id" element={<OrderDetails />} />
               <Route path="/print" element={<PrintInvoice />} />
             </Routes>
           </main>

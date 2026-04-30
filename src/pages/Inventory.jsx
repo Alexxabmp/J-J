@@ -23,7 +23,6 @@ export default function Inventory() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h1 className="page-title" style={{ margin: 0 }}>Inventory</h1>
         <button className="btn-primary" onClick={() => navigate('/inventory/add')}>
           <Plus size={18} /> Add Item
         </button>

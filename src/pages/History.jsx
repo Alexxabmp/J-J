@@ -11,8 +11,6 @@ export default function History() {
 
   return (
     <div>
-      <h1 className="page-title">Order History</h1>
-
       <div className="glass data-table-wrapper" style={{ padding: '1rem' }}>
         <table className="data-table">
           <thead>
@@ -35,7 +33,7 @@ export default function History() {
                 <td>₱{order.netProfit}</td>
                 <td>
                   <div className="actions-cell">
-                    <button className="icon-btn" onClick={() => navigate(`/orders/${order.id}`)} title="View Details">
+                    <button className="icon-btn" onClick={() => navigate(`/history/${order.id}`)} title="View Details">
                       <Eye size={18} />
                     </button>
                     <button className="icon-btn" style={{ color: '#dc2626' }} onClick={() => deleteOrder(order.id)} title="Delete Order">

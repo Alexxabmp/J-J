@@ -25,8 +25,7 @@ export default function AddInventoryItem() {
         <button className="icon-btn" onClick={() => navigate(-1)}>
           <ArrowLeft size={24} />
         </button>
-        <h1 className="page-title" style={{ margin: 0 }}>Add Inventory Item</h1>
-      </div>
+        </div>
 
       <form onSubmit={handleSubmit} className="glass" style={{ padding: '2rem', maxWidth: '500px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

@@ -1,11 +1,13 @@
 import { useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { ArrowLeft } from 'lucide-react';
 
 export default function OrderDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHistory = location.pathname.startsWith('/history');
   const { orders } = useContext(AppContext);
 
   const order = orders.find(o => o.id === id);
@@ -19,11 +21,12 @@ export default function OrderDetails() {
           <button className="icon-btn" onClick={() => navigate(-1)}>
             <ArrowLeft size={24} />
           </button>
-          <h1 className="page-title" style={{ margin: 0 }}>Order Details</h1>
         </div>
-        <button className="btn-primary" onClick={() => navigate(`/orders/edit/${id}`)}>
-          Edit Order
-        </button>
+        {!isHistory && (
+          <button className="btn-primary" onClick={() => navigate(`/orders/edit/${id}`)}>
+            Edit Order
+          </button>
+        )}
       </div>
 
       <div className="glass" style={{ padding: '2rem', maxWidth: '800px' }}>
@@ -46,7 +49,7 @@ export default function OrderDetails() {
           </div>
         </div>
 
-        <h3 style={{ marginBottom: '1rem', color: 'var(--primary-orange)' }}>Items</h3>
+        <h3 style={{ marginBottom: '1.5rem', color: 'var(--text-color)' }}>Items</h3>
         <table className="data-table" style={{ marginBottom: '2rem' }}>
           <thead>
             <tr>
@@ -70,7 +73,7 @@ export default function OrderDetails() {
 
         {order.expensesList && order.expensesList.length > 0 && (
           <>
-            <h3 style={{ marginBottom: '1rem', color: 'var(--primary-orange)', marginTop: '2rem' }}>Expenses</h3>
+            <h3 style={{ marginBottom: '1.5rem', color: 'var(--text-color)', marginTop: '2.5rem' }}>Expenses</h3>
             <table className="data-table" style={{ marginBottom: '2rem' }}>
               <thead>
                 <tr>
@@ -82,7 +85,7 @@ export default function OrderDetails() {
                 {order.expensesList.map((exp, idx) => (
                   <tr key={idx}>
                     <td>{exp.name}</td>
-                    <td style={{ color: '#dc2626' }}>₱{exp.amount}</td>
+                    <td>₱{exp.amount}</td>
                   </tr>
                 ))}
               </tbody>
@@ -96,12 +99,12 @@ export default function OrderDetails() {
             <strong>₱{order.total}</strong>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '300px' }}>
-            <span style={{ color: '#dc2626' }}>Total Expenses:</span>
-            <strong style={{ color: '#dc2626' }}>₱{order.expenses}</strong>
+            <span>Total Expenses:</span>
+            <strong>₱{order.expenses}</strong>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', width: '300px', fontSize: '1.2rem', color: 'var(--primary-orange)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '300px', color: '#dc2626', fontWeight: 'bold' }}>
             <span>Net Profit:</span>
-            <strong>₱{order.netProfit}</strong>
+            <span>₱{order.netProfit}</span>
           </div>
         </div>
       </div>

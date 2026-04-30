@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Eye, Check, Trash2, CheckCircle } from 'lucide-react';
+import { Plus, Eye, Trash2, CheckCircle, User, MapPin } from 'lucide-react';
 
 export default function Orders() {
   const { orders, updateOrder, deleteOrder, markAsDone } = useContext(AppContext);
@@ -18,7 +18,6 @@ export default function Orders() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h1 className="page-title" style={{ margin: 0 }}>Orders</h1>
         <button className="btn-primary" onClick={() => navigate('/orders/add')}>
           <Plus size={18} /> Add Order
         </button>
@@ -40,9 +39,20 @@ export default function Orders() {
           <tbody>
             {activeOrders.map(order => (
               <tr key={order.id}>
-                <td>{order.id}</td>
-                <td>{order.customer}</td>
-                <td>{order.address}</td>
+                <td>
+                  <div className="badge light">{order.id}</div>
+                </td>
+                <td>
+                  <div className="customer-cell">
+                    <span style={{ fontWeight: '600' }}>{order.customer}</span>
+                  </div>
+                </td>
+                <td>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b' }}>
+                    <MapPin size={16} />
+                    <span>{order.address}</span>
+                  </div>
+                </td>
                 <td>
                   <select 
                     value={order.paymentStatus} 

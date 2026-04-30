@@ -4,8 +4,12 @@ import { LayoutDashboard, ShoppingCart, History, Printer, PackageSearch } from '
 export default function Sidebar() {
   return (
     <aside className="sidebar no-print">
-      <div className="logo" style={{ display: 'flex', justifyContent: 'center' }}>
-        <img src="/logo.png" alt="Logo" style={{ width: '150px', height: '150px', objectFit: 'contain', filter: 'var(--logo-filter)' }} />
+      <div className="sidebar-logo-container">
+        <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Logo" style={{ width: '56px', height: '56px', objectFit: 'contain', filter: 'var(--logo-filter)', borderRadius: '14px', boxShadow: '0 4px 10px rgba(255, 94, 0, 0.2)' }} />
+        <div className="sidebar-logo-text">
+          <span className="sidebar-logo-title">J&J</span>
+          <span className="sidebar-logo-subtitle">Rentals</span>
+        </div>
       </div>
       <nav>
         <NavLink to="/dashboard" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
