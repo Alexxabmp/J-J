@@ -47,7 +47,7 @@ export default function PrintInvoice() {
   return (
     <div>
       <div className="flex-header no-print">
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           <select className="input-field" style={{ margin: 0, width: '150px', appearance: 'auto', paddingRight: '30px' }} value={type} onChange={e => setType(e.target.value)}>
             <option value="Invoice">Invoice</option>
             <option value="Quotation">Quotation</option>
@@ -63,7 +63,7 @@ export default function PrintInvoice() {
 
       <div className="glass no-print" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
         <h3 style={{ marginBottom: '1rem' }}>Edit Details</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div className="form-grid">
           <input placeholder="Customer Name" className="input-field" value={data.toName} onChange={e => setData({...data, toName: e.target.value})} />
           <input placeholder="Customer Address" className="input-field" value={data.toAddress} onChange={e => setData({...data, toAddress: e.target.value})} />
           <input type="date" placeholder={type === 'Invoice' ? 'Date' : 'Order Date'} className="input-field" value={data.date1} onChange={e => setData({...data, date1: e.target.value})} />
@@ -71,10 +71,10 @@ export default function PrintInvoice() {
         </div>
         <div style={{ marginTop: '1rem' }}>
           {data.items.map((item, idx) => (
-            <div key={idx} style={{ display: 'flex', gap: '1rem', marginBottom: '0.5rem' }}>
-              <input placeholder="Description" className="input-field" style={{ flex: 2, margin: 0 }} value={item.description} onChange={e => updateItem(idx, 'description', e.target.value)} />
-              <input type="number" placeholder="Qty" className="input-field" style={{ flex: 1, margin: 0 }} value={item.quantity} onChange={e => updateItem(idx, 'quantity', e.target.value)} />
-              <input type="number" placeholder="Rate" className="input-field" style={{ flex: 1, margin: 0 }} value={item.rate} onChange={e => updateItem(idx, 'rate', e.target.value)} />
+            <div key={idx} className="three-col-grid">
+              <input placeholder="Description" className="input-field" style={{ margin: 0 }} value={item.description} onChange={e => updateItem(idx, 'description', e.target.value)} />
+              <input type="number" placeholder="Qty" className="input-field" style={{ margin: 0 }} value={item.quantity} onChange={e => updateItem(idx, 'quantity', e.target.value)} />
+              <input type="number" placeholder="Rate" className="input-field" style={{ margin: 0 }} value={item.rate} onChange={e => updateItem(idx, 'rate', e.target.value)} />
             </div>
           ))}
           <button className="btn-outline" onClick={addItem} style={{ marginTop: '0.5rem' }}>Add Item</button>

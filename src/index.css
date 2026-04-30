@@ -209,6 +209,8 @@ select.input-field {
 .main-content {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
   padding: 1.5rem 2rem;
 }
 
@@ -318,6 +320,14 @@ select.input-field {
 .five-col-grid {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.three-col-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
   gap: 1rem;
   align-items: center;
   margin-bottom: 1rem;
@@ -452,7 +462,7 @@ select.input-field {
     grid-template-columns: 1fr;
   }
   
-  .list-item-grid, .five-col-grid {
+  .list-item-grid, .five-col-grid, .three-col-grid {
     grid-template-columns: 1fr;
     gap: 0.5rem;
     padding-bottom: 1rem;
